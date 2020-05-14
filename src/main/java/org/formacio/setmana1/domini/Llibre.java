@@ -37,6 +37,8 @@ public class Llibre {
 	@Enumerated(EnumType.STRING)
 	private Recomanacio recomanacio;
 	
+	public Llibre() {}
+	
 	public String getIsbn() {
 		return isbn;
 	}

@@ -1,8 +1,13 @@
 package org.formacio.setmana1.data;
 
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.Transactional;
+
 import org.formacio.setmana1.domini.Llibre;
 import org.formacio.setmana1.domini.Recomanacio;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -13,17 +18,36 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class LlibreOpsBasic {
 	
+	@PersistenceContext
+	private EntityManager em;
+	
 	/**
 	 * Retorna el llibre amb l'ISBN indicat o, si no existeix, llança un LlibreNoExisteixException
 	 */
+	
+	@Transactional
 	public Llibre carrega (String isbn) throws LlibreNoExisteixException {
-		return null;
+		
+		if (em.find(Llibre.class, isbn) == null) {
+			throw new LlibreNoExisteixException();
+		} else {
+			return em.find(Llibre.class, isbn);
+		}
 	}
 	
 	/**
 	 * Sense sorpreses: dona d'alta un nou llibre amb les propietats especificaques
 	 */
+	
+	@Transactional
 	public void alta (String isbn, String autor, Integer pagines, Recomanacio recomanacio, String titol) {
+		Llibre llibre = new Llibre();
+		llibre.setIsbn(isbn);
+		llibre.setAutor(autor);
+		llibre.setTitol(titol);
+		llibre.setPagines(pagines);
+		llibre.setRecomanacio(recomanacio);
+		em.persist(llibre);
 	}
 	
 	/**
