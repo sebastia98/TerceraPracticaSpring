@@ -55,14 +55,28 @@ public class LlibreOpsBasic {
 	 * @param isbn del llibre a eliminar
 	 * @return true si s'ha esborrat el llibre, false si no existia
 	 */
+	
+	@Transactional
 	public boolean elimina (String isbn) {
-		return true;
+		if (em.find(Llibre.class, isbn) == null) {
+			
+			return false;
+			
+		}else {
+			
+			em.remove(em.find(Llibre.class, isbn));
+			return true;
+			
+		}
 	}
 	
 	/**
 	 * Guarda a bbdd l'estat del llibre indicat
 	 */
+	@Transactional
 	public void modifica (Llibre llibre) {
+		
+		em.merge(llibre);
 	}
 	
 	/**
@@ -70,7 +84,12 @@ public class LlibreOpsBasic {
 	 * (Aquest metode no llanca excepcions!)
 	 */
 	public boolean existeix (String isbn) {
-		return false;
+		if (em.find(Llibre.class, isbn) == null) {
+			return false;
+		} else {
+			return true;
+		}
+		
 	}
 
 	/**
@@ -78,7 +97,14 @@ public class LlibreOpsBasic {
 	 * Si el llibre indicat no existeix, retorna null
 	 */
 	public Recomanacio recomenacioPer (String isbn) {
-		return null;
+		if (em.find(Llibre.class, isbn) == null) {
+			return null;
+		} else {
+			Llibre llibre = em.find(Llibre.class, isbn);
+			return llibre.getRecomanacio();
+		}
+		
+		
 	}
 	
 }
